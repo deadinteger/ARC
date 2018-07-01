@@ -3,7 +3,9 @@ const { TOKEN, PREFIX, GOOGLE_API_KEY } = require('./config');
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
 const fs = require('fs');
+const rl = require('readline');
 
+const prompts = rl.createInterface(process.stdin, process.stdout);
 const client = new Client({ disableEveryone: true });
 const queue = new Map();
 const youtube = new YouTube(GOOGLE_API_KEY);
@@ -201,148 +203,189 @@ client.on('message', message => {
     }
 });
 
+async function extractOut(msg3) {
+    console.log(msg3.content);
+}
+
+
+var name;
 async function createCharacter(channel, msg) {
-    // try {
+    try {
 
+        msg.channel.send("What is your character's Name?");
+        var response = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("-"), {
+            maxMatches: 1,
+            time: 60000,
+            errors: ['time']
+        });
+        name = `${response.map(msg3 => msg3.content)}`;
+        name = name.substring(1, name.length);
+        msg.channel.send(name);
+        console.log(name);
 
-
-
-
-
-
-
-
-        // var response = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
-        //     maxMatches: 1,
-        //     time: 10000,
-        //     errors: ['time']
-        // });
-            
-
-
-        // var name = "never";
-        // msg.channel.send("What is the name of your Character?");
 
         msg.channel.send("What is your character's class?");
-         var nameOut = await msg.channel.awaitMessages(response => !response.content.includes('^'),
-             {
-             maxMatches: 1,
-             time: 3000,
-             errors: ['time']});
-         name = nameOut.content;
-
-         console.log(name);
-         //const response = await msg.channel.awaitMessages(msg2 => msg2.content.includes(/[a-zA-Z]/), { time: 3000, maxMatches: 1 });
-
-
-        // msg.channel.send(msg.content)
+        var response2 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("-"), {
+            maxMatches: 1,
+            time: 60000,
+            errors: ['time']
+        });
+        cclass = `${response2.map(msg3 => msg3.content)}`;
+        cclass = cclass.substring(1, cclass.length);
+        msg.channel.send(cclass);
+        console.log(cclass);
 
 
-
-        //var name = await msg.channel.awaitMessages();
-       // console.log(name);
-
-
-
-
-
-            // msg.channel.send("What is your character's class?");
-            // var cclass = await msg.channel.awaitMessages();
-            // msg.channel.send("What is your character's level?");
-            // var level = await msg.channel.awaitMessages();
-            // msg.channel.send("What is your character's story/description? (Include if it's a joke character)");
-            // var story = await msg.channel.awaitMessages();
-            // msg.channel.send("What is your character's alignment?");
-            // var alignment = await msg.channel.awaitMessages();
-            // msg.channel.send("Lastly is it homebrew?(Y/N)");
-            // var homebrew = await msg.channel.awaitMessages();
-        // } catch (error) {
-        //     console.error(error);
-        //     console.log("failure");
-        // }
+        msg.channel.send("What is your character's level?");
+        var response3 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("-"), {
+            maxMatches: 1,
+            time: 60000,
+            errors: ['time']
+        });
+        level = `${response3.map(msg3 =>msg3.content)}`;
+        level = level.substring(1,level.length);
+        msg.channel.send(level);
+        console.log(level);
 
 
+        msg.channel.send("What is your character's story/description? (Include if it's a joke character)");
+        var response4 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("-"), {
+            maxMatches: 1,
+            time: 120000,
+            errors: ['time']
+        });
+        story = `${response4.map(msg3 =>msg3.content)}`;
+        story = story.substring(1,story.length);
+        msg.channel.send(story);
+        console.log(story);
 
-        // msg.channel.send(`So the name of your character is : ${name}
-        // Who is a level ${level} ${cclass}
-        // Their alignment is ${alignment}`)
+        msg.channel.send("What is your character's alignment?(One of the nine tile)");
+        var response5 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("-"), {
+            maxMatches: 1,
+            time: 60000,
+            errors: ['time']
+        });
+        align = `${response5.map(msg3 =>msg3.content)}`;
+        align = align.substring(1,align.length);
+        msg.channel.send(align);
+        console.log(align);
+
+
+        msg.channel.send("Lastly is it homebrew?(Yes/No)");
+        var response6 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("-"), {
+            maxMatches: 1,
+            time: 60000,
+            errors: ['time']
+        });
+        homebrew = `${response6.map(msg3 =>msg3.content)}`;
+        homebrew = homebrew.substring(1,homebrew.length);
+        msg.channel.send(homebrew);
+        console.log(homebrew);
+
+    msg.channel.send(`Name: ${name}
+Level: ${level} 
+Class:${cclass}
+Alignment: ${align}
+Homebrew: ${homebrew}
+Description: ${story}
+    
+    ***Is this all correct?*** (Y/N (No dashes required))`);
+    var response7 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("Y"), {
+        maxMatches: 1,
+        time: 60000,
+        errors: ['time']
+    });
+    if (`${response7.map(msg3 =>msg3.content)}` === `Y`) {
+        msg.reply("Cool");
+    } else {
+        
     }
+
+    } catch (error) {
+        //  console.error(error);
+        console.log("failure");
+    }
+
+
+
+
+}
 
 function resetBot(channel) {
-        channel.send('Resetting....')
-            .then(msg => client.destroy())
-            .then(() => client.login(TOKEN));
-    }
-    function shutDown(channel) {
-        channel.send('Shutting Down....')
-            .then(msg => client.destroy())
-    }
+    channel.send('Resetting....')
+        .then(msg => client.destroy())
+        .then(() => client.login(TOKEN));
+}
+function shutDown(channel) {
+    channel.send('Shutting Down....')
+        .then(msg => client.destroy())
+}
 
-    async function handleVideo(video, msg, voiceChannel, playlist = false) {
-        const serverQueue = queue.get(msg.guild.id);
-        console.log(video);
-        const song = {
-            id: video.id,
-            title: Util.escapeMarkdown(video.title),
-            url: `https://www.youtube.com/watch?v=${video.id}`
+async function handleVideo(video, msg, voiceChannel, playlist = false) {
+    const serverQueue = queue.get(msg.guild.id);
+    console.log(video);
+    const song = {
+        id: video.id,
+        title: Util.escapeMarkdown(video.title),
+        url: `https://www.youtube.com/watch?v=${video.id}`
+    };
+    if (!serverQueue) {
+        const queueConstruct = {
+            textChannel: msg.channel,
+            voiceChannel: voiceChannel,
+            connection: null,
+            songs: [],
+            volume: 5,
+            playing: true
         };
-        if (!serverQueue) {
-            const queueConstruct = {
-                textChannel: msg.channel,
-                voiceChannel: voiceChannel,
-                connection: null,
-                songs: [],
-                volume: 5,
-                playing: true
-            };
-            queue.set(msg.guild.id, queueConstruct);
+        queue.set(msg.guild.id, queueConstruct);
 
-            queueConstruct.songs.push(song);
+        queueConstruct.songs.push(song);
 
-            try {
-                var connection = await voiceChannel.join();
-                queueConstruct.connection = connection;
-                play(msg.guild, queueConstruct.songs[0]);
-            }
-            catch (error) {
-                console.error(`Cant join the voice channel : ${error}`);
-                queue.delete(msg.guild.id);
-                return msg.channel.send(`Cant join the voice channel : ${error}`);
-            }
-
-        } else {
-            serverQueue.songs.push(song);
-            console.log(serverQueue.songs);
-
-            if (playlist) return undefined;
-            else return msg.channel.send(`**${song.title} has been queued up!**`);
-
+        try {
+            var connection = await voiceChannel.join();
+            queueConstruct.connection = connection;
+            play(msg.guild, queueConstruct.songs[0]);
         }
-        return undefined;
-    }
-
-    function play(guild, song) {
-        const serverQueue = queue.get(guild.id);
-
-        if (!song) {
-            serverQueue.voiceChannel.leave();
-            queue.delete(guild.id);
-            return;
+        catch (error) {
+            console.error(`Cant join the voice channel : ${error}`);
+            queue.delete(msg.guild.id);
+            return msg.channel.send(`Cant join the voice channel : ${error}`);
         }
+
+    } else {
+        serverQueue.songs.push(song);
         console.log(serverQueue.songs);
 
+        if (playlist) return undefined;
+        else return msg.channel.send(`**${song.title} has been queued up!**`);
 
-        const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
-            .on('end', reason => {
-                if (reason === 'Stream is not generating quick enough.') console.log('Song ended');
-                else console.log(reason);
-                serverQueue.songs.shift();
-                play(guild, serverQueue.songs[0]);
-            })
-            .on('error', error => console.error(error));
-        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-
-        serverQueue.textChannel.send(`Now Playing : ***${song.title}***`);
     }
+    return undefined;
+}
 
-    client.login(TOKEN);
+function play(guild, song) {
+    const serverQueue = queue.get(guild.id);
+
+    if (!song) {
+        serverQueue.voiceChannel.leave();
+        queue.delete(guild.id);
+        return;
+    }
+    console.log(serverQueue.songs);
+
+
+    const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+        .on('end', reason => {
+            if (reason === 'Stream is not generating quick enough.') console.log('Song ended');
+            else console.log(reason);
+            serverQueue.songs.shift();
+            play(guild, serverQueue.songs[0]);
+        })
+        .on('error', error => console.error(error));
+    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+
+    serverQueue.textChannel.send(`Now Playing : ***${song.title}***`);
+}
+
+client.login(TOKEN);
