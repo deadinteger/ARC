@@ -1,0 +1,11 @@
+Name: AsterX
+
+Level: 3
+
+Class:Bard
+
+Alignment: CN
+
+Homebrew: Yes
+
+Description: Joke

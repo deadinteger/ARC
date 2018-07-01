@@ -1,12 +1,14 @@
-const { Client, Util } = require('discord.js');
+const Discord = require('discord.js');
+const Util = require('discord.js');
 const { TOKEN, PREFIX, GOOGLE_API_KEY } = require('./config');
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
 const fs = require('fs');
 const rl = require('readline');
+const randomCat = require('random-cat');
 
 const prompts = rl.createInterface(process.stdin, process.stdout);
-const client = new Client({ disableEveryone: true });
+const client = new Discord.Client({ disableEveryone: true });
 const queue = new Map();
 const youtube = new YouTube(GOOGLE_API_KEY);
 
@@ -184,7 +186,12 @@ ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}
         Math.floor((Math.random() * 20) + 1);
     }
 
-
+    else if(msg.content.startsWith(`${PREFIX}cat`)){
+        var c_url = randomCat.get();
+        console.log(c_url);
+        var catEmbed = new Discord.RichEmbed().setImage(c_url);
+        msg.channel.send(c_url);
+    }
 
     else if (msg.content.startsWith(`${PREFIX}nc`)) {
         createCharacter(msg.channel, msg);
@@ -220,7 +227,7 @@ async function createCharacter(channel, msg) {
         });
         name = `${response.map(msg3 => msg3.content)}`;
         name = name.substring(1, name.length);
-        msg.channel.send(name);
+        // msg.channel.send(name);
         console.log(name);
 
 
@@ -232,7 +239,7 @@ async function createCharacter(channel, msg) {
         });
         cclass = `${response2.map(msg3 => msg3.content)}`;
         cclass = cclass.substring(1, cclass.length);
-        msg.channel.send(cclass);
+        // msg.channel.send(cclass);
         console.log(cclass);
 
 
@@ -244,7 +251,7 @@ async function createCharacter(channel, msg) {
         });
         level = `${response3.map(msg3 => msg3.content)}`;
         level = level.substring(1, level.length);
-        msg.channel.send(level);
+        // msg.channel.send(level);
         console.log(level);
 
 
@@ -256,7 +263,7 @@ async function createCharacter(channel, msg) {
         });
         story = `${response4.map(msg3 => msg3.content)}`;
         story = story.substring(1, story.length);
-        msg.channel.send(story);
+        // msg.channel.send(story);
         console.log(story);
 
         msg.channel.send("What is your character's alignment?(One of the nine tile)");
@@ -267,7 +274,7 @@ async function createCharacter(channel, msg) {
         });
         align = `${response5.map(msg3 => msg3.content)}`;
         align = align.substring(1, align.length);
-        msg.channel.send(align);
+        // msg.channel.send(align);
         console.log(align);
 
 
@@ -279,35 +286,101 @@ async function createCharacter(channel, msg) {
         });
         homebrew = `${response6.map(msg3 => msg3.content)}`;
         homebrew = homebrew.substring(1, homebrew.length);
-        msg.channel.send(homebrew);
+        // msg.channel.send(homebrew);
         console.log(homebrew);
 
-        msg.channel.send(`Name: ${name}
+        msg.channel.send(`Summary:
+Name: ${name}
 Level: ${level} 
 Class:${cclass}
 Alignment: ${align}
 Homebrew: ${homebrew}
 Description: ${story}
     
-    ***Is this all correct?*** (Y/N (No dashes required))`);
-        var response7 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("Y"), {
+***Is this all correct?*** (Y/N (No dashes required))`);
+        var response7 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("N"), {
             maxMatches: 1,
             time: 60000,
             errors: ['time']
         });
+        //save(msg, name, level, align, homebrew, story, cclass);
         if (`${response7.map(msg3 => msg3.content)}` === `Y`) {
-            msg.reply("Cool");
+
+            msg.channel.send("Would you like to add a picture?");
+            var response8 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("N"), {
+                maxMatches: 1,
+                time: 60000,
+                errors: ['time']
+            });
+
+
+            if (`${response8.map(msg3 => msg3.content)}` === `Y`) {
+                const embed = new Discord.RichEmbed()
+                    .setTitle("This is your title, it can hold 256 characters")
+                    .setAuthor(`${msg.author.username}`, `${msg.author.avatarURL}`);
+                    //.setImage(msg.attachments.first().url);
+                    console.log(msg);
+                msg.channel.send(embed);
+            }
+
+
+
+
+
         } else {
 
         }
 
     } catch (error) {
-        //  console.error(error);
+        console.error(error);
         console.log("failure");
     }
 
 
 
+    //
+}
+
+async function save(msg, name, level, align, homebrew, story, cclass) {
+    try {
+
+        if (!fs.existsSync(`${msg.guild.id}`)) {
+            msg.channel.send("Forming new Directory, for New Server");
+            fs.mkdirSync(msg.guild.id);
+            msg.channel.send("Forming new Directory, for New User");
+            fs.mkdirSync(`./${msg.guild.id}/${msg.author.id}`);
+            msg.channel.send(`Forming new character under ${msg.author}'s folder`);
+            makeCharacterFile(msg, name, level, align, homebrew, story, cclass);
+            msg.channel.send("Character Created!");
+        } else if (!fs.existsSync(`./${msg.guild.id}/${msg.author.id}`)) {
+            msg.channel.send("Forming new Directory, for New User");
+            fs.mkdirSync(msg.author.id);
+            msg.channel.send(`Forming new character under ${msg.author}'s folder`);
+            makeCharacterFile(msg, name, level, align, homebrew, story, cclass);
+            msg.channel.send("Character Created!");
+        } else {
+            msg.channel.send(`Forming new character under ${msg.author}'s folder`);
+            makeCharacterFile(msg, name, level, align, homebrew, story, cclass);
+            msg.channel.send("Character Created!");
+        }
+
+
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+function makeCharacterFile(msg, name, level, align, homebrew, story, cclass) {
+    fs.writeFileSync(`./${msg.guild.id}/${msg.author.id}/${name}.txt`, `Name: ${name}\r\n
+Level: ${level}\r\n
+Class:${cclass}\r\n
+Alignment: ${align}\r\n
+Homebrew: ${homebrew}\r\n
+Description: ${story}\r\n`);
+}
+
+function readFile(msg) {
 
 }
 

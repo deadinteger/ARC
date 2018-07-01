@@ -1,0 +1,11 @@
+Name: Q
+
+Level: Q
+
+Class:Q
+
+Alignment: Q
+
+Homebrew: Q
+
+Description: Q
