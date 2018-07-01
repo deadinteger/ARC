@@ -1,0 +1,27 @@
+! ***Music Command List*** !
+
+%play [youtube link or search terms]**-** Allows you to play music from youtube using either a link or just a search (Requires Voice Channel)
+    NOTE: Using search will prompt you to choose from the first 10 options available from youtube.
+
+%pause **-** Pauses the currently playing song
+
+%resume **-** Resumes the currently paused song
+
+%stop **-** Empties all songs in the queue, stops whatever song it's playing and disconnects the bot from the Voice Channel
+
+%skip **-** Allows you to skip the current song and jump to the next one in queue
+
+%volume [Number in between 0-6]**-** Using this command on it's own allows you to view volume, but putting a number after will set it.
+    NOTE: Anything past 6 is untested, use at own risk.
+
+%np **-** Displays the current song playing
+
+%queue **-** Shows you all the songs in the queue
+
+! ***DND Command List (WIP)*** !
+
+%roll [d4,d6,d8,d12,d20] **-** Rolls a either a 4,6,8,12, or 20 sided die
+
+! ***Miscellaneous Command List (WIP)*** !
+
+%help **-** Well...
