@@ -242,8 +242,8 @@ async function createCharacter(channel, msg) {
             time: 60000,
             errors: ['time']
         });
-        level = `${response3.map(msg3 =>msg3.content)}`;
-        level = level.substring(1,level.length);
+        level = `${response3.map(msg3 => msg3.content)}`;
+        level = level.substring(1, level.length);
         msg.channel.send(level);
         console.log(level);
 
@@ -254,8 +254,8 @@ async function createCharacter(channel, msg) {
             time: 120000,
             errors: ['time']
         });
-        story = `${response4.map(msg3 =>msg3.content)}`;
-        story = story.substring(1,story.length);
+        story = `${response4.map(msg3 => msg3.content)}`;
+        story = story.substring(1, story.length);
         msg.channel.send(story);
         console.log(story);
 
@@ -265,8 +265,8 @@ async function createCharacter(channel, msg) {
             time: 60000,
             errors: ['time']
         });
-        align = `${response5.map(msg3 =>msg3.content)}`;
-        align = align.substring(1,align.length);
+        align = `${response5.map(msg3 => msg3.content)}`;
+        align = align.substring(1, align.length);
         msg.channel.send(align);
         console.log(align);
 
@@ -277,12 +277,12 @@ async function createCharacter(channel, msg) {
             time: 60000,
             errors: ['time']
         });
-        homebrew = `${response6.map(msg3 =>msg3.content)}`;
-        homebrew = homebrew.substring(1,homebrew.length);
+        homebrew = `${response6.map(msg3 => msg3.content)}`;
+        homebrew = homebrew.substring(1, homebrew.length);
         msg.channel.send(homebrew);
         console.log(homebrew);
 
-    msg.channel.send(`Name: ${name}
+        msg.channel.send(`Name: ${name}
 Level: ${level} 
 Class:${cclass}
 Alignment: ${align}
@@ -290,16 +290,16 @@ Homebrew: ${homebrew}
 Description: ${story}
     
     ***Is this all correct?*** (Y/N (No dashes required))`);
-    var response7 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("Y"), {
-        maxMatches: 1,
-        time: 60000,
-        errors: ['time']
-    });
-    if (`${response7.map(msg3 =>msg3.content)}` === `Y`) {
-        msg.reply("Cool");
-    } else {
-        
-    }
+        var response7 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("Y"), {
+            maxMatches: 1,
+            time: 60000,
+            errors: ['time']
+        });
+        if (`${response7.map(msg3 => msg3.content)}` === `Y`) {
+            msg.reply("Cool");
+        } else {
+
+        }
 
     } catch (error) {
         //  console.error(error);
