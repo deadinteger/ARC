@@ -186,7 +186,7 @@ ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}
         Math.floor((Math.random() * 20) + 1);
     }
 
-    else if(msg.content.startsWith(`${PREFIX}cat`)){
+    else if (msg.content.startsWith(`${PREFIX}cat`)) {
         var c_url = randomCat.get();
         console.log(c_url);
         var catEmbed = new Discord.RichEmbed().setImage(c_url);
@@ -195,6 +195,11 @@ ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}
 
     else if (msg.content.startsWith(`${PREFIX}nc`)) {
         createCharacter(msg.channel, msg);
+    }
+
+    else if (msg.content.startsWith(`${PREFIX}test`)) {
+        test(msg);
+
     }
     return undefined;
 });
@@ -214,12 +219,35 @@ async function extractOut(msg3) {
     console.log(msg3.content);
 }
 
+async function test(msg) {
+    var x;
+    msg.channel.send("What is your character's class?");
+    try {
+        var response2 = await msg.channel.awaitMessages(msg2 =>isString(msg2.content) && !msg2.author.bot, {
+                maxMatches: 1,
+                time: 10000,
+                errors: ['time']
+            });
+        x = `${response2.map(msg3 => msg3.content)}`;
+        msg.channel.send(x);
+    } catch (error) {
+        console.error(error);
+    }
+
+
+}
+
+function isString(obj) {
+    return (Object.prototype.toString.call(obj) === '[object String]');
+}
+
+
 
 var name;
 async function createCharacter(channel, msg) {
     try {
 
-        msg.channel.send("What is your character's Name?");
+        msg.channel.send("Please enter both the name of your character (-name) and the picture in your next message");
         var response = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("-"), {
             maxMatches: 1,
             time: 60000,
@@ -289,14 +317,14 @@ async function createCharacter(channel, msg) {
         // msg.channel.send(homebrew);
         console.log(homebrew);
 
-        var summary = 
-`Summary:
+        var summary =
+            `Summary:
 Name: ${name}
 Level: ${level} 
 Class:${cclass}
 Alignment: ${align}
 Homebrew: ${homebrew}
-Description: ${story}`;   
+Description: ${story}`;
 
         msg.channel.send(summary);
         msg.channel.send(`***Is this all correct?*** (Y/N (No dashes required))`);
@@ -308,7 +336,7 @@ Description: ${story}`;
         //save(msg, name, level, align, homebrew, story, cclass);
         if (`${response7.map(msg3 => msg3.content)}` === `Y`) {
 
-            msg.channel.send("Would you like to add a picture?, if so respond Y and add in the picture within the same message. Otherwise enter N");
+            msg.channel.send("Would you like to add the picture?, if so respond Y and add in the picture within the same message. Otherwise enter N");
             var response8 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("N"), {
                 maxMatches: 1,
                 time: 60000,
@@ -322,7 +350,7 @@ Description: ${story}`;
                     .setAuthor(`${msg.author.username}`, `${msg.author.avatarURL}`)
                     .setImage(msg.attachments.first().url)
                     .setDescription(summary);
-                    //console.log(msg.attachments.first().url);
+                //console.log(msg.attachments.first().url);
                 msg.channel.send(embed);
             }
 
