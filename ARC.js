@@ -244,7 +244,7 @@ async function test(msg) {
             { time: 10000, maxMatches: 1 });
 
         imgURL = `${response9.map(msg3 => msg3.attachments.first().url)}`;
-
+        var summary = "";
         const embed = new Discord.RichEmbed()
             .setTitle(`${name}`)
             .setAuthor(`${msg.author.username}`, `${msg.author.avatarURL}`)
@@ -252,10 +252,6 @@ async function test(msg) {
             .setDescription(summary);
         //console.log(msg.attachments.first().url);
         msg.channel.send(embed);
-
-
-        var Attachment = (msg.attachments).array();
-        console.log(Attachment[0].url);
     } catch (error) {
         console.error(error);
     }
@@ -319,33 +315,18 @@ Description: ${story}`;
         if (`${response7.map(msg3 => msg3.content)}` === `Y`) {
 
             msg.channel.send("Would you like to add a picture?, if so respond Y. Otherwise enter N");
-            var response8 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("N"), {
-                maxMatches: 1,
-                time: 60000,
-                errors: ['time']
-            });
+            var response9 = await msg.channel.awaitMessages(msg2 => isUrl(msg2.attachments.first().url) && !msg2.author.bot,
+                { time: 10000, maxMatches: 1 });
 
+            imgURL = `${response9.map(msg3 => msg3.attachments.first().url)}`;
 
-            if (`${response8.map(msg3 => msg3.content)}` === `Y`) {
-                var response9 = await msg.channel.awaitMessages(msg2 => {
-                    c = isUrl(msg2.attachments) && !msg.author.bot;
-                },
-                    { time: 10000, maxMatches: 1 });
-
-                imgURL = `${response8.map(msg3 => msg3.attachments)}`;
-
-                const embed = new Discord.RichEmbed()
-                    .setTitle(`${name}`)
-                    .setAuthor(`${msg.author.username}`, `${msg.author.avatarURL}`)
-                    .setImage(msg.attachments.first().url)
-                    .setDescription(summary);
-                //console.log(msg.attachments.first().url);
-                msg.channel.send(embed);
-            }
-
-
-
-
+            const embed = new Discord.RichEmbed()
+                .setTitle(`${name}`)
+                .setAuthor(`${msg.author.username}`, `${msg.author.avatarURL}`)
+                .setImage(imgURL)
+                .setDescription(summary);
+            //console.log(msg.attachments.first().url);
+            msg.channel.send(embed);
 
         } else {
 
