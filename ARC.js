@@ -289,15 +289,17 @@ async function createCharacter(channel, msg) {
         // msg.channel.send(homebrew);
         console.log(homebrew);
 
-        msg.channel.send(`Summary:
+        var summary = 
+`Summary:
 Name: ${name}
 Level: ${level} 
 Class:${cclass}
 Alignment: ${align}
 Homebrew: ${homebrew}
-Description: ${story}
-    
-***Is this all correct?*** (Y/N (No dashes required))`);
+Description: ${story}`;   
+
+        msg.channel.send(summary);
+        msg.channel.send(`***Is this all correct?*** (Y/N (No dashes required))`);
         var response7 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("N"), {
             maxMatches: 1,
             time: 60000,
@@ -306,7 +308,7 @@ Description: ${story}
         //save(msg, name, level, align, homebrew, story, cclass);
         if (`${response7.map(msg3 => msg3.content)}` === `Y`) {
 
-            msg.channel.send("Would you like to add a picture?");
+            msg.channel.send("Would you like to add a picture?, if so respond Y and add in the picture within the same message. Otherwise enter N");
             var response8 = await msg.channel.awaitMessages(msg2 => msg2.content.startsWith("Y") || msg2.content.startsWith("N"), {
                 maxMatches: 1,
                 time: 60000,
@@ -316,10 +318,11 @@ Description: ${story}
 
             if (`${response8.map(msg3 => msg3.content)}` === `Y`) {
                 const embed = new Discord.RichEmbed()
-                    .setTitle("This is your title, it can hold 256 characters")
-                    .setAuthor(`${msg.author.username}`, `${msg.author.avatarURL}`);
-                    //.setImage(msg.attachments.first().url);
-                    console.log(msg);
+                    .setTitle(`${name}`)
+                    .setAuthor(`${msg.author.username}`, `${msg.author.avatarURL}`)
+                    .setImage(msg.attachments.first().url)
+                    .setDescription(summary);
+                    //console.log(msg.attachments.first().url);
                 msg.channel.send(embed);
             }
 
